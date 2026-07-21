@@ -1,0 +1,290 @@
+---
+import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { weatherConfig } from "@/config/weatherConfig";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+
+interface Props {
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+}
+
+const { class: className, style, widgetConfig } = Astro.props;
+const showTitle = widgetConfig?.showTitle !== false;
+const { unit } = weatherConfig;
+const tempUnit = unit === "fahrenheit" ? "°F" : "°C";
+const fallbackLat = weatherConfig.latitude;
+const fallbackLon = weatherConfig.longitude;
+const fallbackCity = weatherConfig.city;
+---
+
+<WidgetLayout
+  name={i18n(I18nKey.weather)}
+  showTitle={showTitle}
+  id="weather-widget"
+  isCollapsed={true}
+  collapsedHeight="152px"
+  useExpandedButtonSpacing={true}
+  class:list={[className]}
+  style={style}
+>
+  <div class="weather-container pb-1">
+    <!-- 加载状态 -->
+    <div id="weather-loading" class="flex items-center justify-center gap-2 text-neutral-500 py-4">
+      <Icon is:inline name="material-symbols:cloud-sync-rounded" class="text-xl animate-spin" />
+      <span class="text-sm">{i18n(I18nKey.weatherLoading)}</span>
+    </div>
+
+    <!-- 天气信息 -->
+    <div id="weather-content" class="hidden">
+      <!-- ===== 核心信息：折叠时始终可见 ===== -->
+      <!-- 城市名 -->
+      <div id="weather-city" class="text-center text-sm font-medium text-neutral-700 dark:text-neutral-200 mb-2">
+      </div>
+
+      <!-- 天气图标 + 当前温度 -->
+      <div class="flex items-center justify-center gap-3 mb-1">
+        <span id="weather-icon" class="text-5xl"></span>
+        <div class="text-left">
+          <span id="weather-temp" class="text-3xl font-bold text-neutral-800 dark:text-neutral-100 leading-none"></span>
+          <div id="weather-range" class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+          </div>
+        </div>
+      </div>
+
+      <!-- 天气描述 -->
+      <div id="weather-desc" class="text-center text-sm text-neutral-600 dark:text-neutral-300 mt-1">
+      </div>
+
+      <!-- ===== 展开后显示的详情 ===== -->
+      <div id="weather-detail" class="mt-3 pt-3 border-t border-neutral-200 dark:border-neutral-700">
+        <!-- 详情网格 -->
+        <div class="grid grid-cols-2 gap-x-3 gap-y-2.5">
+          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+            <Icon is:inline name="material-symbols:water-drop-rounded" class="text-base" />
+            <span>湿度</span>
+            <span id="weather-humidity" class="ml-auto font-medium text-neutral-700 dark:text-neutral-200">--</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+            <Icon is:inline name="material-symbols:air-rounded" class="text-base" />
+            <span>风速</span>
+            <span id="weather-wind" class="ml-auto font-medium text-neutral-700 dark:text-neutral-200">--</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+            <Icon is:inline name="material-symbols:compress-rounded" class="text-base" />
+            <span>气压</span>
+            <span id="weather-pressure" class="ml-auto font-medium text-neutral-700 dark:text-neutral-200">--</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+            <Icon is:inline name="material-symbols:cloud-outline" class="text-base" />
+            <span>云量</span>
+            <span id="weather-cloud" class="ml-auto font-medium text-neutral-700 dark:text-neutral-200">--</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+            <Icon is:inline name="material-symbols:visibility-rounded" class="text-base" />
+            <span>能见度</span>
+            <span id="weather-visibility" class="ml-auto font-medium text-neutral-700 dark:text-neutral-200">--</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+            <Icon is:inline name="material-symbols:grain" class="text-base" />
+            <span>降水量</span>
+            <span id="weather-precipitation" class="ml-auto font-medium text-neutral-700 dark:text-neutral-200">--</span>
+          </div>
+        </div>
+
+        <!-- 日出日落 -->
+        <div class="flex items-center justify-center gap-4 mt-3 pt-2.5 border-t border-neutral-100 dark:border-neutral-800">
+          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+            <Icon is:inline name="material-symbols:sunny-rounded" class="text-base text-amber-500" />
+            <span>日出</span>
+            <span id="weather-sunrise" class="font-medium text-neutral-700 dark:text-neutral-200">--</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
+            <Icon is:inline name="material-symbols:dark-mode-rounded" class="text-base text-indigo-400" />
+            <span>日落</span>
+            <span id="weather-sunset" class="font-medium text-neutral-700 dark:text-neutral-200">--</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 错误状态 -->
+    <div id="weather-error" class="hidden text-center text-neutral-500 py-4">
+      <Icon is:inline name="material-symbols:error-outline-rounded" class="text-xl mb-1 block mx-auto" />
+      <span class="text-sm">{i18n(I18nKey.weatherError)}</span>
+    </div>
+  </div>
+</WidgetLayout>
+
+<script is:inline define:vars={{ tempUnit, fallbackLat, fallbackLon, fallbackCity }}>
+  var weatherEmoji = {
+    0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️",
+    45: "🌫️", 48: "🌫️",
+    51: "🌦️", 53: "🌦️", 55: "🌧️",
+    61: "🌧️", 63: "🌧️", 65: "🌧️",
+    71: "🌨️", 73: "🌨️", 75: "❄️",
+    80: "🌦️", 81: "🌦️", 82: "⛈️",
+    95: "⛈️", 96: "⛈️", 99: "⛈️",
+  };
+
+  var weatherLabels = {
+    0: "晴天", 1: "少云", 2: "多云", 3: "阴天",
+    45: "雾", 48: "雾凇",
+    51: "毛毛雨", 53: "毛毛雨", 55: "毛毛雨",
+    61: "小雨", 63: "中雨", 65: "大雨",
+    71: "小雪", 73: "中雪", 75: "大雪",
+    80: "阵雨", 81: "阵雨", 82: "大阵雨",
+    95: "雷暴", 96: "雷暴冰雹", 99: "雷暴冰雹",
+  };
+
+  function getPosition() {
+    return new Promise(function (resolve) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (pos) {
+            resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude, city: null, source: "gps" });
+          },
+          function () { tryIPGeo(resolve); },
+          { timeout: 5000, maximumAge: 600000 }
+        );
+      } else {
+        tryIPGeo(resolve);
+      }
+    });
+  }
+
+  function tryIPGeo(resolve) {
+    fetch("https://ipapi.co/json/")
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data.latitude && data.longitude) {
+          resolve({ lat: data.latitude, lon: data.longitude, city: data.city || null, source: "ip" });
+        } else {
+          resolve({ lat: fallbackLat, lon: fallbackLon, city: fallbackCity, source: "fallback" });
+        }
+      })
+      .catch(function () {
+        resolve({ lat: fallbackLat, lon: fallbackLon, city: fallbackCity, source: "fallback" });
+      });
+  }
+
+  function reverseGeocode(lat, lon) {
+    return fetch("https://geocoding-api.open-meteo.com/v1/search?latitude=" + lat + "&longitude=" + lon + "&count=1&language=zh")
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data.results && data.results.length > 0) {
+          var r = data.results[0];
+          return r.name || r.admin2 || r.admin1 || r.country || "";
+        }
+        return "";
+      })
+      .catch(function () { return ""; });
+  }
+
+  function fetchWeatherByCoords(lat, lon) {
+    var params = "latitude=" + lat + "&longitude=" + lon
+      + "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,surface_pressure,cloud_cover,precipitation"
+      + "&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,weather_code"
+      + "&hourly=visibility"
+      + "&timezone=auto&forecast_days=1";
+    return fetch("https://api.open-meteo.com/v1/forecast?" + params)
+      .then(function (r) {
+        if (!r.ok) throw new Error("API error");
+        return r.json();
+      });
+  }
+
+  function formatTime(isoString) {
+    if (!isoString) return "--";
+    var date = new Date(isoString);
+    var h = date.getHours();
+    var m = date.getMinutes();
+    return ("0" + h).slice(-2) + ":" + ("0" + m).slice(-2);
+  }
+
+  function updateUI(current, daily, hourly, cityName) {
+    var code = current.weather_code;
+    var high = daily.temperature_2m_max[0];
+    var low = daily.temperature_2m_min[0];
+
+    // 核心信息
+    document.getElementById("weather-city").textContent = cityName || "";
+    document.getElementById("weather-icon").textContent = weatherEmoji[code] || "🌈";
+    document.getElementById("weather-temp").textContent = Math.round(current.temperature_2m) + " " + tempUnit;
+    document.getElementById("weather-range").textContent = "↑ " + Math.round(high) + tempUnit + "  ↓ " + Math.round(low) + tempUnit;
+    document.getElementById("weather-desc").textContent = weatherLabels[code] || "未知";
+
+    // 详情
+    document.getElementById("weather-humidity").textContent = current.relative_humidity_2m + "%";
+    document.getElementById("weather-wind").textContent = current.wind_speed_10m + " km/h";
+    document.getElementById("weather-pressure").textContent = Math.round(current.surface_pressure) + " hPa";
+    document.getElementById("weather-cloud").textContent = current.cloud_cover + "%";
+    document.getElementById("weather-precipitation").textContent = (daily.precipitation_sum[0] || 0) + " mm";
+
+    // 能见度取当前小时的近似值
+    if (hourly && hourly.visibility) {
+      var now = new Date();
+      var hourIndex = now.getHours();
+      var visibility = hourly.visibility[hourIndex] || hourly.visibility[0];
+      document.getElementById("weather-visibility").textContent = (visibility / 1000).toFixed(1) + " km";
+    } else {
+      document.getElementById("weather-visibility").textContent = "--";
+    }
+
+    // 日出日落
+    document.getElementById("weather-sunrise").textContent = formatTime(daily.sunrise[0]);
+    document.getElementById("weather-sunset").textContent = formatTime(daily.sunset[0]);
+  }
+
+  async function fetchWeather() {
+    var loading = document.getElementById("weather-loading");
+    var content = document.getElementById("weather-content");
+    var errorEl = document.getElementById("weather-error");
+
+    try {
+      var pos = await getPosition();
+      var weatherPromise = fetchWeatherByCoords(pos.lat, pos.lon);
+
+      var cityName;
+      if (pos.city) {
+        cityName = pos.city;
+      } else if (pos.source === "fallback") {
+        cityName = pos.city;
+      } else {
+        cityName = await reverseGeocode(pos.lat, pos.lon);
+      }
+
+      var data = await weatherPromise;
+      updateUI(data.current, data.daily, data.hourly, cityName);
+
+      if (loading) loading.classList.add("hidden");
+      if (content) content.classList.remove("hidden");
+      if (errorEl) errorEl.classList.add("hidden");
+    } catch (e) {
+      if (loading) loading.classList.add("hidden");
+      if (content) content.classList.add("hidden");
+      if (errorEl) errorEl.classList.remove("hidden");
+    }
+  }
+
+  fetchWeather();
+  document.addEventListener("swup:contentReplaced", function () { setTimeout(fetchWeather, 100); });
+</script>
+
+<style>
+  .weather-container {
+    min-height: 80px;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .animate-spin {
+    animation: spin 1.5s linear infinite;
+  }
+</style>

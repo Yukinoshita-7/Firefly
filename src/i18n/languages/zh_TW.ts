@@ -369,6 +369,10 @@ export const zh_TW: Translation = {
 	[Key.calendarDecember]: "12月",
 	[Key.calendar]: "站點日曆",
 	[Key.calendarHeatmapWeek]: "{month}月第{week}週，{count}篇文章",
+	[Key.weather]: "天气",
+	[Key.weatherLoading]: "加载中...",
+	[Key.weatherError]: "获取天气失败",
+	[Key.quoteOfTheDay]: "每日一言",
 	[Key.advertisement]: "廣告",
 
 	[Key.shareArticle]: "分享",

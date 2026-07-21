@@ -378,6 +378,10 @@ export const ru: Translation = {
 	[Key.calendarDecember]: "Дек",
 	[Key.calendar]: "Календарь сайта",
 	[Key.calendarHeatmapWeek]: "Неделя {week} {month}, {count} записей",
+	[Key.weather]: "Погода",
+	[Key.weatherLoading]: "Загрузка...",
+	[Key.weatherError]: "Не удалось загрузить",
+	[Key.quoteOfTheDay]: "Цитата дня",
 	[Key.advertisement]: "Реклама",
 
 	[Key.shareArticle]: "Поделиться",

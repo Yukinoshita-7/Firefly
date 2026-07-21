@@ -1,0 +1,56 @@
+---
+import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { quoteOfTheDayConfig } from "@/config/quoteOfTheDayConfig";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+
+interface Props {
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+}
+
+const { class: className, style, widgetConfig } = Astro.props;
+
+const showTitle = widgetConfig?.showTitle !== false;
+
+// 随机选取一条名言
+const quotes = quoteOfTheDayConfig.quotes;
+const randomIndex = Math.floor(Math.random() * quotes.length);
+const quote = quotes[randomIndex];
+---
+
+<WidgetLayout
+  name={quoteOfTheDayConfig.title || i18n(I18nKey.quoteOfTheDay)}
+  showTitle={showTitle}
+  id="quote-of-the-day"
+  class:list={[className]}
+  style={style}
+>
+  <div class="quote-container text-center py-3">
+    <!-- 引用图标 -->
+    <div class="mb-3 text-(--primary) opacity-60">
+      <Icon is:inline name="material-symbols:format-quote-rounded" class="text-3xl" />
+    </div>
+
+    <!-- 名言内容 -->
+    <blockquote class="text-neutral-700 dark:text-neutral-200 leading-relaxed mb-3 text-base italic">
+      {quote.text}
+    </blockquote>
+
+    <!-- 作者 -->
+    {quote.author && (
+      <cite class="text-sm text-neutral-500 dark:text-neutral-400 not-italic block text-right">
+        —— {quote.author}
+      </cite>
+    )}
+  </div>
+</WidgetLayout>
+
+<style>
+  .quote-container {
+    position: relative;
+  }
+</style>

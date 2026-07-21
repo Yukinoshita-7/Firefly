@@ -366,6 +366,10 @@ enum I18nKey {
 	calendar = "calendar",
 	calendarHeatmapWeek = "calendarHeatmapWeek",
 	advertisement = "advertisement",
+	quoteOfTheDay = "quoteOfTheDay",
+	weather = "weather",
+	weatherLoading = "weatherLoading",
+	weatherError = "weatherError",
 
 	shareArticle = "shareArticle",
 	generatingPoster = "generatingPoster",

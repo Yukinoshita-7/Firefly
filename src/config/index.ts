@@ -58,6 +58,8 @@ export { navBarConfig, navBarSearchConfig } from "./navBarConfig"; // 导航栏�
 export { live2dWidgetConfig, spineModelConfig } from "./pioConfig"; // 看板娘配置
 export { plantumlConfig } from "./plantumlConfig"; // PlantUML 图表配置
 export { profileConfig } from "./profileConfig"; // 用户资料配置
+export { quoteOfTheDayConfig } from "./quoteOfTheDayConfig"; // 每日一言配置
+export { weatherConfig } from "./weatherConfig"; // 天气组件配置
 // 布局配置
 export { sidebarLayoutConfig } from "./sidebarConfig"; // 侧边栏布局配置
 // 核心配置

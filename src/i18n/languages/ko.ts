@@ -374,6 +374,10 @@ export const ko: Translation = {
 	[Key.calendarDecember]: "12월",
 	[Key.calendar]: "사이트 캘린더",
 	[Key.calendarHeatmapWeek]: "{month}의 {week}주차, 게시글 {count}개",
+	[Key.weather]: "날씨",
+	[Key.weatherLoading]: "로딩 중...",
+	[Key.weatherError]: "날씨를 불러오지 못함",
+	[Key.quoteOfTheDay]: "오늘의 명언",
 	[Key.advertisement]: "광고",
 
 	[Key.shareArticle]: "공유",

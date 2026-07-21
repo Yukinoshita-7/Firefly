@@ -376,6 +376,10 @@ export const en: Translation = {
 	[Key.calendarDecember]: "Dec",
 	[Key.calendar]: "Site Calendar",
 	[Key.calendarHeatmapWeek]: "Week {week} of {month}, {count} posts",
+	[Key.weather]: "Weather",
+	[Key.weatherLoading]: "Loading...",
+	[Key.weatherError]: "Failed to load",
+	[Key.quoteOfTheDay]: "Quote of the Day",
 	[Key.advertisement]: "Advertisement",
 
 	[Key.shareArticle]: "Share",

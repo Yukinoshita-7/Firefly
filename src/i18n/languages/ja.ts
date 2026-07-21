@@ -375,6 +375,10 @@ export const ja: Translation = {
 	[Key.calendarDecember]: "12月",
 	[Key.calendar]: "サイトカレンダー",
 	[Key.calendarHeatmapWeek]: "{month}月第{week}週、{count}記事",
+	[Key.weather]: "天気",
+	[Key.weatherLoading]: "読み込み中...",
+	[Key.weatherError]: "天気の取得に失敗",
+	[Key.quoteOfTheDay]: "今日の一言",
 	[Key.advertisement]: "広告",
 
 	[Key.shareArticle]: "共有",
