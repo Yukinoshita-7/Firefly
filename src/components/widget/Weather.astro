@@ -26,7 +26,7 @@ const fallbackCity = weatherConfig.city;
   showTitle={showTitle}
   id="weather-widget"
   isCollapsed={true}
-  collapsedHeight="152px"
+  collapsedHeight="120px"
   useExpandedButtonSpacing={true}
   class:list={[className]}
   style={style}
@@ -41,72 +41,143 @@ const fallbackCity = weatherConfig.city;
     <!-- 天气信息 -->
     <div id="weather-content" class="hidden">
       <!-- ===== 核心信息：折叠时始终可见 ===== -->
-      <!-- 城市名 -->
-      <div id="weather-city" class="text-center text-sm font-medium text-neutral-700 dark:text-neutral-200 mb-2">
-      </div>
-
-      <!-- 天气图标 + 当前温度 -->
-      <div class="flex items-center justify-center gap-3 mb-1">
-        <span id="weather-icon" class="text-5xl"></span>
-        <div class="text-left">
-          <span id="weather-temp" class="text-3xl font-bold text-neutral-800 dark:text-neutral-100 leading-none"></span>
-          <div id="weather-range" class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
-          </div>
+      <div class="wx-core">
+        <!-- 定位 -->
+        <div class="wx-loc">
+          <Icon is:inline name="material-symbols:location-on-rounded" class="wx-loc-icon" />
+          <span id="weather-city"></span>
         </div>
-      </div>
 
-      <!-- 天气描述 -->
-      <div id="weather-desc" class="text-center text-sm text-neutral-600 dark:text-neutral-300 mt-1">
+        <!-- 当前温度 + 描述 + 天气图标 -->
+        <div class="wx-temp-row">
+          <span id="weather-temp" class="wx-temp"></span>
+          <span id="weather-desc" class="wx-desc"></span>
+          <span id="weather-icon" class="wx-main-icon"></span>
+        </div>
+
+        <!-- 高低温 -->
+        <div class="wx-range">
+          <span class="wx-high">高温&nbsp;<span id="weather-high">--</span></span>
+          <span class="wx-range-sep">/</span>
+          <span class="wx-low">低温&nbsp;<span id="weather-low">--</span></span>
+        </div>
       </div>
 
       <!-- ===== 展开后显示的详情 ===== -->
-      <div id="weather-detail" class="mt-3 pt-3 border-t border-neutral-200 dark:border-neutral-700">
+      <div id="weather-detail" class="wx-detail">
+        <div class="wx-divider"></div>
+
         <!-- 详情网格 -->
-        <div class="grid grid-cols-2 gap-x-3 gap-y-2.5">
-          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-            <Icon is:inline name="material-symbols:water-drop-rounded" class="text-base" />
-            <span>湿度</span>
-            <span id="weather-humidity" class="ml-auto font-medium text-neutral-700 dark:text-neutral-200">--</span>
+        <div class="wx-grid">
+          <div class="wx-item">
+            <Icon is:inline name="material-symbols:air-rounded" class="wx-item-icon text-sky-400" />
+            <div class="wx-item-body">
+              <div class="wx-item-label">风力</div>
+              <div id="weather-wind" class="wx-item-value">--</div>
+            </div>
           </div>
-          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-            <Icon is:inline name="material-symbols:air-rounded" class="text-base" />
-            <span>风速</span>
-            <span id="weather-wind" class="ml-auto font-medium text-neutral-700 dark:text-neutral-200">--</span>
+          <div class="wx-item">
+            <Icon is:inline name="material-symbols:visibility-rounded" class="wx-item-icon text-sky-400" />
+            <div class="wx-item-body">
+              <div class="wx-item-label">能见度</div>
+              <div id="weather-visibility" class="wx-item-value">--</div>
+            </div>
           </div>
-          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-            <Icon is:inline name="material-symbols:compress-rounded" class="text-base" />
-            <span>气压</span>
-            <span id="weather-pressure" class="ml-auto font-medium text-neutral-700 dark:text-neutral-200">--</span>
+          <div class="wx-item">
+            <Icon is:inline name="material-symbols:thermostat-rounded" class="wx-item-icon text-red-400" />
+            <div class="wx-item-body">
+              <div class="wx-item-label">体感温度</div>
+              <div id="weather-feels" class="wx-item-value">--</div>
+            </div>
           </div>
-          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-            <Icon is:inline name="material-symbols:cloud-outline" class="text-base" />
-            <span>云量</span>
-            <span id="weather-cloud" class="ml-auto font-medium text-neutral-700 dark:text-neutral-200">--</span>
+          <div class="wx-item">
+            <Icon is:inline name="material-symbols:water-drop-rounded" class="wx-item-icon text-blue-400" />
+            <div class="wx-item-body">
+              <div class="wx-item-label">湿度</div>
+              <div id="weather-humidity" class="wx-item-value">--</div>
+            </div>
           </div>
-          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-            <Icon is:inline name="material-symbols:visibility-rounded" class="text-base" />
-            <span>能见度</span>
-            <span id="weather-visibility" class="ml-auto font-medium text-neutral-700 dark:text-neutral-200">--</span>
+          <div class="wx-item">
+            <Icon is:inline name="material-symbols:compress-rounded" class="wx-item-icon text-purple-400" />
+            <div class="wx-item-body">
+              <div class="wx-item-label">气压</div>
+              <div id="weather-pressure" class="wx-item-value">--</div>
+            </div>
           </div>
-          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-            <Icon is:inline name="material-symbols:grain" class="text-base" />
-            <span>降水量</span>
-            <span id="weather-precipitation" class="ml-auto font-medium text-neutral-700 dark:text-neutral-200">--</span>
+          <div class="wx-item">
+            <Icon is:inline name="material-symbols:eco-rounded" class="wx-item-icon text-green-400" />
+            <div class="wx-item-body">
+              <div class="wx-item-label">空气质量</div>
+              <div class="wx-item-value">
+                <span id="weather-aqi">--</span>
+                <span id="weather-aqi-badge" class="wx-badge hidden"></span>
+              </div>
+            </div>
+          </div>
+          <div class="wx-item">
+            <Icon is:inline name="material-symbols:cloud" class="wx-item-icon text-neutral-400" />
+            <div class="wx-item-body">
+              <div class="wx-item-label">云量</div>
+              <div id="weather-cloud" class="wx-item-value">--</div>
+            </div>
+          </div>
+          <div class="wx-item">
+            <Icon is:inline name="material-symbols:wb-sunny-rounded" class="wx-item-icon text-amber-400" />
+            <div class="wx-item-body">
+              <div class="wx-item-label">紫外线</div>
+              <div id="weather-uv" class="wx-item-value">--</div>
+            </div>
+          </div>
+          <div class="wx-item">
+            <Icon is:inline name="material-symbols:rainy" class="wx-item-icon text-cyan-400" />
+            <div class="wx-item-body">
+              <div class="wx-item-label">降水量</div>
+              <div id="weather-precipitation" class="wx-item-value">--</div>
+            </div>
+          </div>
+          <div class="wx-item">
+            <Icon is:inline name="material-symbols:water-drop" class="wx-item-icon text-blue-400" />
+            <div class="wx-item-body">
+              <div class="wx-item-label">降水概率</div>
+              <div id="weather-pop" class="wx-item-value">--</div>
+            </div>
+          </div>
+          <div class="wx-item">
+            <Icon is:inline name="material-symbols:wb-twilight-rounded" class="wx-item-icon text-amber-500" />
+            <div class="wx-item-body">
+              <div class="wx-item-label">日出</div>
+              <div id="weather-sunrise" class="wx-item-value">--</div>
+            </div>
+          </div>
+          <div class="wx-item">
+            <Icon is:inline name="material-symbols:wb-twilight-rounded" class="wx-item-icon text-orange-500" />
+            <div class="wx-item-body">
+              <div class="wx-item-label">日落</div>
+              <div id="weather-sunset" class="wx-item-value">--</div>
+            </div>
           </div>
         </div>
 
-        <!-- 日出日落 -->
-        <div class="flex items-center justify-center gap-4 mt-3 pt-2.5 border-t border-neutral-100 dark:border-neutral-800">
-          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-            <Icon is:inline name="material-symbols:sunny-rounded" class="text-base text-amber-500" />
-            <span>日出</span>
-            <span id="weather-sunrise" class="font-medium text-neutral-700 dark:text-neutral-200">--</span>
+        <!-- 污染物浓度 -->
+        <div class="wx-pollutants">
+          <div class="wx-poll-head">
+            <Icon is:inline name="material-symbols:science" class="wx-poll-icon text-red-400" />
+            <span>污染物浓度</span>
           </div>
-          <div class="flex items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-            <Icon is:inline name="material-symbols:dark-mode-rounded" class="text-base text-indigo-400" />
-            <span>日落</span>
-            <span id="weather-sunset" class="font-medium text-neutral-700 dark:text-neutral-200">--</span>
+          <div class="wx-poll-grid">
+            <span>PM2.5: <b id="weather-pm25">--</b></span>
+            <span>PM10: <b id="weather-pm10">--</b></span>
+            <span>O<sub>3</sub>: <b id="weather-o3">--</b></span>
+            <span>NO<sub>2</sub>: <b id="weather-no2">--</b></span>
+            <span>SO<sub>2</sub>: <b id="weather-so2">--</b></span>
+            <span>CO: <b id="weather-co">--</b></span>
           </div>
+        </div>
+
+        <!-- 发布时间 -->
+        <div class="wx-updated">
+          <Icon is:inline name="material-symbols:schedule-rounded" class="wx-updated-icon" />
+          <span id="weather-updated">--</span>
         </div>
       </div>
     </div>
@@ -140,6 +211,35 @@ const fallbackCity = weatherConfig.city;
     95: "雷暴", 96: "雷暴冰雹", 99: "雷暴冰雹",
   };
 
+  // 8 方位风向
+  function windDirLabel(deg) {
+    if (deg == null || isNaN(deg)) return "";
+    var dirs = ["北风", "东北风", "东风", "东南风", "南风", "西南风", "西风", "西北风"];
+    var idx = Math.round(deg / 45) % 8;
+    return dirs[idx];
+  }
+
+  // 蒲福风力等级（km/h）
+  function beaufortLevel(kmh) {
+    var b = [1, 6, 12, 20, 29, 39, 50, 62, 75, 89, 103, 118];
+    var lvl = 0;
+    for (var i = 0; i < b.length; i++) {
+      if (kmh >= b[i]) lvl = i + 1;
+    }
+    return lvl;
+  }
+
+  // 空气质量等级（美标 AQI）
+  function aqiCategory(aqi) {
+    if (aqi == null || isNaN(aqi)) return null;
+    if (aqi <= 50) return { text: "优", color: "#16a34a" };
+    if (aqi <= 100) return { text: "良", color: "#eab308" };
+    if (aqi <= 150) return { text: "轻度", color: "#f97316" };
+    if (aqi <= 200) return { text: "中度", color: "#ef4444" };
+    if (aqi <= 300) return { text: "重度", color: "#a855f7" };
+    return { text: "严重", color: "#7f1d1d" };
+  }
+
   function getPosition() {
     return new Promise(function (resolve) {
       if (navigator.geolocation) {
@@ -172,29 +272,41 @@ const fallbackCity = weatherConfig.city;
   }
 
   function reverseGeocode(lat, lon) {
-    return fetch("https://geocoding-api.open-meteo.com/v1/search?latitude=" + lat + "&longitude=" + lon + "&count=1&language=zh")
+    // 使用 OpenStreetMap Nominatim，accept-language=zh-CN 确保中国城市名为简体中文
+    return fetch("https://nominatim.openstreetmap.org/reverse?lat=" + lat + "&lon=" + lon + "&format=json&accept-language=zh-CN&zoom=10")
       .then(function (r) { return r.json(); })
       .then(function (data) {
-        if (data.results && data.results.length > 0) {
-          var r = data.results[0];
-          return r.name || r.admin2 || r.admin1 || r.country || "";
-        }
-        return "";
+        var a = data.address || {};
+        return data.name || a.city || a.town || a.county || a.district || a.municipality || a.state || a.country || "";
       })
       .catch(function () { return ""; });
   }
 
   function fetchWeatherByCoords(lat, lon) {
+    var tempParam = tempUnit === "°F" ? "&temperature_unit=fahrenheit" : "";
     var params = "latitude=" + lat + "&longitude=" + lon
-      + "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,surface_pressure,cloud_cover,precipitation"
-      + "&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,weather_code"
-      + "&hourly=visibility"
+      + "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,cloud_cover,precipitation"
+      + "&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,precipitation_probability_max,uv_index_max,weather_code"
+      + "&hourly=visibility,uv_index,precipitation_probability"
+      + tempParam
       + "&timezone=auto&forecast_days=1";
     return fetch("https://api.open-meteo.com/v1/forecast?" + params)
       .then(function (r) {
         if (!r.ok) throw new Error("API error");
         return r.json();
       });
+  }
+
+  function fetchAirQuality(lat, lon) {
+    var params = "latitude=" + lat + "&longitude=" + lon
+      + "&current=pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone,us_aqi"
+      + "&timezone=auto";
+    return fetch("https://air-quality-api.open-meteo.com/v1/air-quality?" + params)
+      .then(function (r) {
+        if (!r.ok) throw new Error("AQ error");
+        return r.json();
+      })
+      .catch(function () { return null; });
   }
 
   function formatTime(isoString) {
@@ -205,7 +317,22 @@ const fallbackCity = weatherConfig.city;
     return ("0" + h).slice(-2) + ":" + ("0" + m).slice(-2);
   }
 
-  function updateUI(current, daily, hourly, cityName) {
+  function fmt(v, suffix) {
+    if (v == null || isNaN(v)) return "--";
+    return Math.round(v) + (suffix || "");
+  }
+
+  function relativeTime(isoString) {
+    if (!isoString) return "刚刚发布";
+    var t = new Date(isoString).getTime();
+    var diffMin = Math.round((Date.now() - t) / 60000);
+    if (isNaN(diffMin) || diffMin < 1) return "刚刚发布";
+    if (diffMin < 60) return diffMin + "分钟前发布";
+    var h = Math.floor(diffMin / 60);
+    return h + "小时前发布";
+  }
+
+  function updateUI(current, daily, hourly, air, cityName) {
     var code = current.weather_code;
     var high = daily.temperature_2m_max[0];
     var low = daily.temperature_2m_min[0];
@@ -213,30 +340,78 @@ const fallbackCity = weatherConfig.city;
     // 核心信息
     document.getElementById("weather-city").textContent = cityName || "";
     document.getElementById("weather-icon").textContent = weatherEmoji[code] || "🌈";
-    document.getElementById("weather-temp").textContent = Math.round(current.temperature_2m) + " " + tempUnit;
-    document.getElementById("weather-range").textContent = "↑ " + Math.round(high) + tempUnit + "  ↓ " + Math.round(low) + tempUnit;
+    document.getElementById("weather-temp").textContent = Math.round(current.temperature_2m) + "°";
     document.getElementById("weather-desc").textContent = weatherLabels[code] || "未知";
+    document.getElementById("weather-high").textContent = Math.round(high) + " " + tempUnit;
+    document.getElementById("weather-low").textContent = Math.round(low) + " " + tempUnit;
 
-    // 详情
-    document.getElementById("weather-humidity").textContent = current.relative_humidity_2m + "%";
-    document.getElementById("weather-wind").textContent = current.wind_speed_10m + " km/h";
-    document.getElementById("weather-pressure").textContent = Math.round(current.surface_pressure) + " hPa";
-    document.getElementById("weather-cloud").textContent = current.cloud_cover + "%";
-    document.getElementById("weather-precipitation").textContent = (daily.precipitation_sum[0] || 0) + " mm";
+    // 当前小时索引
+    var hourIndex = new Date().getHours();
 
-    // 能见度取当前小时的近似值
+    // 风力
+    var windDir = windDirLabel(current.wind_direction_10m);
+    var windLvl = beaufortLevel(current.wind_speed_10m);
+    document.getElementById("weather-wind").textContent = (windDir ? windDir + " " : "") + windLvl + "级";
+
+    // 能见度
     if (hourly && hourly.visibility) {
-      var now = new Date();
-      var hourIndex = now.getHours();
-      var visibility = hourly.visibility[hourIndex] || hourly.visibility[0];
-      document.getElementById("weather-visibility").textContent = (visibility / 1000).toFixed(1) + " km";
-    } else {
-      document.getElementById("weather-visibility").textContent = "--";
+      var vis = hourly.visibility[hourIndex] || hourly.visibility[0];
+      document.getElementById("weather-visibility").textContent = (vis / 1000).toFixed(1) + "km";
     }
+
+    // 体感温度
+    document.getElementById("weather-feels").textContent = fmt(current.apparent_temperature, " " + tempUnit);
+
+    // 湿度
+    document.getElementById("weather-humidity").textContent = current.relative_humidity_2m + "%";
+
+    // 气压
+    document.getElementById("weather-pressure").textContent = Math.round(current.surface_pressure) + "hPa";
+
+    // 云量
+    document.getElementById("weather-cloud").textContent = current.cloud_cover + "%";
+
+    // 紫外线
+    var uv = null;
+    if (hourly && hourly.uv_index) uv = hourly.uv_index[hourIndex];
+    if (uv == null && daily.uv_index_max) uv = daily.uv_index_max[0];
+    document.getElementById("weather-uv").textContent = uv == null ? "--" : Math.round(uv);
+
+    // 降水量
+    document.getElementById("weather-precipitation").textContent = (daily.precipitation_sum[0] || 0) + "mm";
+
+    // 降水概率
+    var pop = null;
+    if (hourly && hourly.precipitation_probability) pop = hourly.precipitation_probability[hourIndex];
+    if (pop == null && daily.precipitation_probability_max) pop = daily.precipitation_probability_max[0];
+    document.getElementById("weather-pop").textContent = pop == null ? "--" : pop + "%";
 
     // 日出日落
     document.getElementById("weather-sunrise").textContent = formatTime(daily.sunrise[0]);
     document.getElementById("weather-sunset").textContent = formatTime(daily.sunset[0]);
+
+    // 空气质量与污染物
+    if (air && air.current) {
+      var c = air.current;
+      var aqi = c.us_aqi;
+      document.getElementById("weather-aqi").textContent = aqi == null ? "--" : Math.round(aqi);
+      var cat = aqiCategory(aqi);
+      var badge = document.getElementById("weather-aqi-badge");
+      if (cat) {
+        badge.textContent = cat.text;
+        badge.style.backgroundColor = cat.color;
+        badge.classList.remove("hidden");
+      }
+      document.getElementById("weather-pm25").textContent = fmt(c.pm2_5);
+      document.getElementById("weather-pm10").textContent = fmt(c.pm10);
+      document.getElementById("weather-o3").textContent = fmt(c.ozone);
+      document.getElementById("weather-no2").textContent = fmt(c.nitrogen_dioxide);
+      document.getElementById("weather-so2").textContent = fmt(c.sulphur_dioxide);
+      document.getElementById("weather-co").textContent = fmt(c.carbon_monoxide);
+    }
+
+    // 发布时间
+    document.getElementById("weather-updated").textContent = relativeTime(current.time);
   }
 
   async function fetchWeather() {
@@ -247,18 +422,19 @@ const fallbackCity = weatherConfig.city;
     try {
       var pos = await getPosition();
       var weatherPromise = fetchWeatherByCoords(pos.lat, pos.lon);
+      var airPromise = fetchAirQuality(pos.lat, pos.lon);
 
       var cityName;
-      if (pos.city) {
-        cityName = pos.city;
-      } else if (pos.source === "fallback") {
+      if (pos.source === "fallback") {
         cityName = pos.city;
       } else {
         cityName = await reverseGeocode(pos.lat, pos.lon);
+        if (!cityName && pos.city) cityName = pos.city;
       }
 
       var data = await weatherPromise;
-      updateUI(data.current, data.daily, data.hourly, cityName);
+      var air = await airPromise;
+      updateUI(data.current, data.daily, data.hourly, air, cityName);
 
       if (loading) loading.classList.add("hidden");
       if (content) content.classList.remove("hidden");
@@ -277,6 +453,192 @@ const fallbackCity = weatherConfig.city;
 <style>
   .weather-container {
     min-height: 80px;
+  }
+
+  /* ===== 核心信息 ===== */
+  .wx-loc {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgb(64 64 64);
+    margin-bottom: 0.15rem;
+  }
+  :global(.dark) .wx-loc {
+    color: rgb(229 229 229);
+  }
+  .wx-loc-icon {
+    font-size: 1.05rem;
+    color: var(--primary);
+  }
+
+  .wx-main-icon {
+    font-size: 2.25rem;
+    line-height: 1;
+    margin-left: auto;
+  }
+
+  .wx-temp-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .wx-temp {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    color: rgb(38 38 38);
+  }
+  :global(.dark) .wx-temp {
+    color: rgb(245 245 245);
+  }
+
+  .wx-desc {
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: rgb(82 82 82);
+  }
+  :global(.dark) .wx-desc {
+    color: rgb(212 212 212);
+  }
+
+  .wx-range {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .wx-high { color: #ef4444; }
+  .wx-low { color: #3b82f6; }
+  .wx-range-sep { color: rgb(163 163 163); }
+
+  /* ===== 详情 ===== */
+  .wx-divider {
+    border-top: 1px dashed rgb(212 212 212);
+    margin: 0.85rem 0;
+  }
+  :global(.dark) .wx-divider {
+    border-top-color: rgb(64 64 64);
+  }
+
+  .wx-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem 0.75rem;
+  }
+
+  .wx-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .wx-item-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .wx-item-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .wx-item-label {
+    font-size: 0.75rem;
+    color: rgb(115 115 115);
+    line-height: 1.1;
+  }
+  :global(.dark) .wx-item-label {
+    color: rgb(163 163 163);
+  }
+
+  .wx-item-value {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: rgb(64 64 64);
+    line-height: 1.25;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  :global(.dark) .wx-item-value {
+    color: rgb(229 229 229);
+  }
+
+  .wx-badge {
+    display: inline-block;
+    padding: 0 0.35rem;
+    border-radius: 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.3;
+  }
+
+  /* ===== 污染物 ===== */
+  .wx-pollutants {
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgb(229 229 229);
+  }
+  :global(.dark) .wx-pollutants {
+    border-top-color: rgb(64 64 64);
+  }
+
+  .wx-poll-head {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgb(82 82 82);
+    margin-bottom: 0.5rem;
+  }
+  :global(.dark) .wx-poll-head {
+    color: rgb(212 212 212);
+  }
+  .wx-poll-icon {
+    font-size: 1.2rem;
+  }
+
+  .wx-poll-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem 0.5rem;
+    font-size: 0.8rem;
+    color: rgb(115 115 115);
+  }
+  :global(.dark) .wx-poll-grid {
+    color: rgb(163 163 163);
+  }
+  .wx-poll-grid b {
+    font-weight: 700;
+    color: rgb(64 64 64);
+  }
+  :global(.dark) .wx-poll-grid b {
+    color: rgb(229 229 229);
+  }
+
+  /* ===== 发布时间 ===== */
+  .wx-updated {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: rgb(115 115 115);
+  }
+  :global(.dark) .wx-updated {
+    color: rgb(163 163 163);
+  }
+  .wx-updated-icon {
+    font-size: 1rem;
   }
 
   @keyframes spin {
