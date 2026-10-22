@@ -466,6 +466,16 @@ export const ja: Translation = {
 	[Key.siteInfoDomain]: "ドメイン",
 	[Key.siteInfoLicense]: "ライセンス",
 
+	// 日付カウントダウン
+	[Key.countdown]: "日付カウントダウン",
+	[Key.countdownYearRemaining]: "今年の残り {days} 日",
+	[Key.countdownMonthRemaining]: "今月の残り {days} 日",
+	[Key.countdownWeekRemaining]: "今週の残り {days} 日",
+	[Key.countdownTodayHoursRemaining]: "今日の残り {hours} 時間",
+	[Key.countdownTodayMinutesRemaining]: "今日の残り {minutes} 分",
+	[Key.countdownNextStation]: "次の予定まで",
+	[Key.countdownDayUnit]: "日",
+
 	// カレンダーコンポーネント
 	[Key.calendarSunday]: "日",
 	[Key.calendarMonday]: "月",

@@ -11,6 +11,7 @@ export type {
 	BooknavPageConfig,
 } from "./booknavConfig";
 export type { CommentConfig } from "./commentConfig";
+export type { CountdownConfig, CountdownEvent } from "./countdownConfig";
 export type { CoverImageConfig } from "./coverImageConfig";
 export type { DisplaySettingsConfig } from "./displaySettingsConfig";
 export type { DynamicConfig } from "./dynamicConfig";

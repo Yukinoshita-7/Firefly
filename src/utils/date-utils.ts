@@ -5,6 +5,28 @@ export function formatDateToYYYYMMDD(date: Date): string {
 }
 
 // 国际化日期格式化函数
+export function getDateLocale(lang: string = siteConfig.lang || "en"): string {
+	// 语言代码映射
+	const localeMap: Record<string, string> = {
+		zh_CN: "zh-CN",
+		zh_TW: "zh-TW",
+		en: "en-US",
+		ja: "ja-JP",
+		ko: "ko-KR",
+		es: "es-ES",
+		th: "th-TH",
+		vi: "vi-VN",
+		tr: "tr-TR",
+		id: "id-ID",
+		fr: "fr-FR",
+		de: "de-DE",
+		ru: "ru-RU",
+		ar: "ar-SA",
+	};
+
+	return localeMap[lang] || "en-US";
+}
+
 export function formatDateI18n(
 	dateInput: Date | string,
 	includeTime?: boolean,
@@ -30,25 +52,7 @@ export function formatDateI18n(
 		(options as Intl.DateTimeFormatOptions).timeZone = siteConfig.timezone;
 	}
 
-	// 语言代码映射
-	const localeMap: Record<string, string> = {
-		zh_CN: "zh-CN",
-		zh_TW: "zh-TW",
-		en: "en-US",
-		ja: "ja-JP",
-		ko: "ko-KR",
-		es: "es-ES",
-		th: "th-TH",
-		vi: "vi-VN",
-		tr: "tr-TR",
-		id: "id-ID",
-		fr: "fr-FR",
-		de: "de-DE",
-		ru: "ru-RU",
-		ar: "ar-SA",
-	};
-
-	const locale = localeMap[lang] || "en-US";
+	const locale = getDateLocale(lang);
 	return includeTime
 		? date.toLocaleString(locale, options)
 		: date.toLocaleDateString(locale, options);

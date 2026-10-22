@@ -466,6 +466,16 @@ export const ko: Translation = {
 	[Key.siteInfoDomain]: "도메인",
 	[Key.siteInfoLicense]: "라이선스",
 
+	// 날짜 카운트다운
+	[Key.countdown]: "날짜 카운트다운",
+	[Key.countdownYearRemaining]: "올해 {days}일 남음",
+	[Key.countdownMonthRemaining]: "이번 달 {days}일 남음",
+	[Key.countdownWeekRemaining]: "이번 주 {days}일 남음",
+	[Key.countdownTodayHoursRemaining]: "오늘 {hours}시간 남음",
+	[Key.countdownTodayMinutesRemaining]: "오늘 {minutes}분 남음",
+	[Key.countdownNextStation]: "다음 일정까지",
+	[Key.countdownDayUnit]: "일",
+
 	// Calendar Component
 	[Key.calendarSunday]: "일",
 	[Key.calendarMonday]: "월",

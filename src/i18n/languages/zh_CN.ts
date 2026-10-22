@@ -458,6 +458,16 @@ export const zh_CN: Translation = {
 	[Key.siteInfoDomain]: "站点域名",
 	[Key.siteInfoLicense]: "文章许可",
 
+	// 日期倒计时
+	[Key.countdown]: "日期倒计时",
+	[Key.countdownYearRemaining]: "本年还剩 {days} 天",
+	[Key.countdownMonthRemaining]: "本月还剩 {days} 天",
+	[Key.countdownWeekRemaining]: "本周还剩 {days} 天",
+	[Key.countdownTodayHoursRemaining]: "今日还剩 {hours} 小时",
+	[Key.countdownTodayMinutesRemaining]: "今日还剩 {minutes} 分钟",
+	[Key.countdownNextStation]: "距离下一站",
+	[Key.countdownDayUnit]: "天",
+
 	// 日历组件
 	[Key.calendarSunday]: "日",
 	[Key.calendarMonday]: "一",

@@ -470,6 +470,16 @@ export const ru: Translation = {
 	[Key.siteInfoDomain]: "Домен",
 	[Key.siteInfoLicense]: "Лицензия",
 
+	// Обратный отсчёт
+	[Key.countdown]: "Обратный отсчёт",
+	[Key.countdownYearRemaining]: "До конца года: {days} дн.",
+	[Key.countdownMonthRemaining]: "До конца месяца: {days} дн.",
+	[Key.countdownWeekRemaining]: "До конца недели: {days} дн.",
+	[Key.countdownTodayHoursRemaining]: "До конца дня: {hours} ч.",
+	[Key.countdownTodayMinutesRemaining]: "До конца дня: {minutes} мин.",
+	[Key.countdownNextStation]: "До следующего события",
+	[Key.countdownDayUnit]: "дн.",
+
 	// Компонент календаря
 	[Key.calendarSunday]: "Вс",
 	[Key.calendarMonday]: "Пн",

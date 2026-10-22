@@ -452,6 +452,16 @@ enum I18nKey {
 	siteInfoDomain = "siteInfoDomain",
 	siteInfoLicense = "siteInfoLicense",
 
+	// 日期倒计时
+	countdown = "countdown",
+	countdownYearRemaining = "countdownYearRemaining",
+	countdownMonthRemaining = "countdownMonthRemaining",
+	countdownWeekRemaining = "countdownWeekRemaining",
+	countdownTodayHoursRemaining = "countdownTodayHoursRemaining",
+	countdownTodayMinutesRemaining = "countdownTodayMinutesRemaining",
+	countdownNextStation = "countdownNextStation",
+	countdownDayUnit = "countdownDayUnit",
+
 	// 日历组件
 	calendarSunday = "calendarSunday",
 	calendarMonday = "calendarMonday",

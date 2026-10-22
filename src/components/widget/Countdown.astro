@@ -1,0 +1,278 @@
+---
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { countdownConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+import { getCountdownSnapshot } from "@/utils/countdown-utils";
+import { getDateLocale } from "@/utils/date-utils";
+
+interface Props {
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+}
+
+const { class: className, style, widgetConfig } = Astro.props;
+
+const showTitle = widgetConfig?.showTitle !== false;
+
+// 事件列表可在侧边栏配置的 specificConfig.countdown.events 中覆盖
+const events =
+	widgetConfig?.specificConfig?.countdown?.events ?? countdownConfig.events;
+
+const locale = getDateLocale();
+const snapshot = getCountdownSnapshot(new Date(), events, locale);
+
+const labels = {
+	year: i18n(I18nKey.countdownYearRemaining),
+	month: i18n(I18nKey.countdownMonthRemaining),
+	week: i18n(I18nKey.countdownWeekRemaining),
+	todayHours: i18n(I18nKey.countdownTodayHoursRemaining),
+	todayMinutes: i18n(I18nKey.countdownTodayMinutesRemaining),
+	next: i18n(I18nKey.countdownNextStation),
+	dayUnit: i18n(I18nKey.countdownDayUnit),
+};
+
+const fillLabel = (
+	template: string,
+	placeholder: string,
+	value: number,
+): string => template.replace(`{${placeholder}}`, String(value));
+
+const rows = snapshot.periods.map((period) => {
+	let template: string;
+	if (period.key === "today") {
+		template =
+			period.unit === "minutes" ? labels.todayMinutes : labels.todayHours;
+	} else if (period.key === "year") {
+		template = labels.year;
+	} else if (period.key === "month") {
+		template = labels.month;
+	} else {
+		template = labels.week;
+	}
+
+	return {
+		...period,
+		label: fillLabel(template, period.unit, period.remaining),
+	};
+});
+
+const nextEvent = snapshot.nextEvent;
+const nextEventLabel = nextEvent?.category
+	? `${labels.next} · ${nextEvent.category}`
+	: labels.next;
+---
+
+<WidgetLayout
+  name={i18n(I18nKey.countdown)}
+  showTitle={showTitle}
+  id="countdown-widget"
+  class={className}
+  style={style}
+>
+  <div
+    class="select-none"
+    data-countdown-widget
+    data-locale={locale}
+    data-events={JSON.stringify(events)}
+    data-label-year={labels.year}
+    data-label-month={labels.month}
+    data-label-week={labels.week}
+    data-label-today-hours={labels.todayHours}
+    data-label-today-minutes={labels.todayMinutes}
+    data-label-next={labels.next}
+  >
+    <div
+      class="mb-5 text-center text-base font-bold text-neutral-900 dark:text-neutral-100"
+      data-countdown-date
+    >
+      {snapshot.dateText}
+    </div>
+
+    <div class="flex flex-col gap-4">
+      {
+        rows.map((row) => (
+          <div class="flex items-center gap-3">
+            <div
+              class="w-16 shrink-0 text-xl font-extrabold text-(--primary) tabular-nums"
+              data-countdown-percent={row.key}
+            >
+              {row.percent.toFixed(1)}%
+            </div>
+            <div class="min-w-0 flex-1">
+              <div
+                class="mb-1.5 text-sm font-bold text-neutral-800 dark:text-neutral-200"
+                data-countdown-label={row.key}
+              >
+                {row.label}
+              </div>
+              <div class="h-2 w-full overflow-hidden rounded-full bg-neutral-200/90 dark:bg-neutral-200/80">
+                <div
+                  class="h-full rounded-full bg-(--primary) transition-[width] duration-500 ease-out"
+                  style={`width: ${row.percent}%`}
+                  data-countdown-bar={row.key}
+                >
+                </div>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div
+      class:list={[
+        "mt-5 border-t border-dashed border-neutral-300/80 pt-4 dark:border-neutral-600/70",
+        { hidden: !nextEvent },
+      ]}
+      data-countdown-next
+    >
+      <div class="flex items-end justify-between gap-3">
+        <div class="min-w-0">
+          <div
+            class="text-xs text-neutral-500 dark:text-neutral-400"
+            data-countdown-next-label
+          >
+            {nextEventLabel}
+          </div>
+          <div
+            class="mt-1 truncate text-lg font-bold text-neutral-900 dark:text-neutral-100"
+            data-countdown-next-name
+          >
+            {nextEvent?.name ?? ""}
+          </div>
+          <div
+            class="mt-0.5 text-sm text-neutral-500 tabular-nums dark:text-neutral-400"
+            data-countdown-next-date
+          >
+            {nextEvent?.date ?? ""}
+          </div>
+        </div>
+        <div class="flex shrink-0 items-baseline gap-1 text-(--primary)">
+          <span
+            class="text-4xl font-extrabold leading-none tabular-nums"
+            data-countdown-next-days
+          >
+            {nextEvent?.daysLeft ?? 0}
+          </span>
+          <span class="text-sm font-semibold">{labels.dayUnit}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</WidgetLayout>
+
+<script>
+	import type { CountdownEvent } from "@/types/countdownConfig";
+	import { getCountdownSnapshot } from "@/utils/countdown-utils";
+
+	function fillTemplate(
+		template: string | undefined,
+		placeholder: string,
+		value: number,
+	): string {
+		if (!template) return "";
+		return template.replace(`{${placeholder}}`, String(value));
+	}
+
+	function updateCountdown(root: HTMLElement): void {
+		let events: CountdownEvent[] = [];
+		try {
+			events = JSON.parse(root.dataset.events || "[]") as CountdownEvent[];
+		} catch {
+			events = [];
+		}
+
+		const snapshot = getCountdownSnapshot(
+			new Date(),
+			events,
+			root.dataset.locale || "en-US",
+		);
+
+		const dateEl = root.querySelector<HTMLElement>("[data-countdown-date]");
+		if (dateEl) dateEl.textContent = snapshot.dateText;
+
+		for (const period of snapshot.periods) {
+			const percentEl = root.querySelector<HTMLElement>(
+				`[data-countdown-percent="${period.key}"]`,
+			);
+			const labelEl = root.querySelector<HTMLElement>(
+				`[data-countdown-label="${period.key}"]`,
+			);
+			const barEl = root.querySelector<HTMLElement>(
+				`[data-countdown-bar="${period.key}"]`,
+			);
+
+			if (percentEl) percentEl.textContent = `${period.percent.toFixed(1)}%`;
+			if (barEl) barEl.style.width = `${period.percent}%`;
+
+			if (labelEl) {
+				let template: string | undefined;
+				if (period.key === "today") {
+					template =
+						period.unit === "minutes"
+							? root.dataset.labelTodayMinutes
+							: root.dataset.labelTodayHours;
+				} else if (period.key === "year") {
+					template = root.dataset.labelYear;
+				} else if (period.key === "month") {
+					template = root.dataset.labelMonth;
+				} else {
+					template = root.dataset.labelWeek;
+				}
+				labelEl.textContent = fillTemplate(
+					template,
+					period.unit,
+					period.remaining,
+				);
+			}
+		}
+
+		const nextBlock = root.querySelector<HTMLElement>("[data-countdown-next]");
+		if (!nextBlock) return;
+
+		const { nextEvent } = snapshot;
+		if (!nextEvent) {
+			nextBlock.classList.add("hidden");
+			return;
+		}
+
+		nextBlock.classList.remove("hidden");
+
+		const nextLabel = root.querySelector<HTMLElement>(
+			"[data-countdown-next-label]",
+		);
+		const nextName = root.querySelector<HTMLElement>(
+			"[data-countdown-next-name]",
+		);
+		const nextDate = root.querySelector<HTMLElement>(
+			"[data-countdown-next-date]",
+		);
+		const nextDays = root.querySelector<HTMLElement>(
+			"[data-countdown-next-days]",
+		);
+
+		if (nextLabel) {
+			nextLabel.textContent = nextEvent.category
+				? `${root.dataset.labelNext ?? ""} · ${nextEvent.category}`
+				: (root.dataset.labelNext ?? "");
+		}
+		if (nextName) nextName.textContent = nextEvent.name;
+		if (nextDate) nextDate.textContent = nextEvent.date;
+		if (nextDays) nextDays.textContent = String(nextEvent.daysLeft);
+	}
+
+	function updateAllCountdowns(): void {
+		document
+			.querySelectorAll<HTMLElement>("[data-countdown-widget]")
+			.forEach(updateCountdown);
+	}
+
+	updateAllCountdowns();
+
+	// Swup 切页会替换侧边栏内容，需要重新填充；计时器只在首次加载时注册一次
+	document.addEventListener("swup:contentReplaced", updateAllCountdowns);
+	setInterval(updateAllCountdowns, 30_000);
+</script>

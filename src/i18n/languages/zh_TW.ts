@@ -460,6 +460,16 @@ export const zh_TW: Translation = {
 	[Key.siteInfoDomain]: "站點域名",
 	[Key.siteInfoLicense]: "文章許可",
 
+	// 日期倒數
+	[Key.countdown]: "日期倒數",
+	[Key.countdownYearRemaining]: "本年還剩 {days} 天",
+	[Key.countdownMonthRemaining]: "本月還剩 {days} 天",
+	[Key.countdownWeekRemaining]: "本週還剩 {days} 天",
+	[Key.countdownTodayHoursRemaining]: "今日還剩 {hours} 小時",
+	[Key.countdownTodayMinutesRemaining]: "今日還剩 {minutes} 分鐘",
+	[Key.countdownNextStation]: "距離下一站",
+	[Key.countdownDayUnit]: "天",
+
 	// 日曆組件
 	[Key.calendarSunday]: "日",
 	[Key.calendarMonday]: "一",

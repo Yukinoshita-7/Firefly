@@ -143,6 +143,26 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			},
 		},
 		{
+			// 组件类型：日期倒计时组件
+			type: "countdown",
+			// 是否启用该组件
+			enable: true,
+			// 是否显示组件标题（卡片自带日期标题）
+			showTitle: false,
+			// 组件位置
+			position: "top",
+			// 是否在文章详情页显示
+			showOnPostPage: true,
+			// 组件专属配置（不填则使用 countdownConfig 中的默认事件列表）
+			// specificConfig: {
+			// 	countdown: {
+			// 		events: [
+			// 			{ name: "万圣节", date: "2026-10-31", category: "国际" },
+			// 		],
+			// 	},
+			// },
+		},
+		{
 			// 组件类型：日历组件
 			type: "calendar",
 			// 是否启用该组件

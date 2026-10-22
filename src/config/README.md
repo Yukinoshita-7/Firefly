@@ -12,6 +12,7 @@ src/config/
 ├── announcementConfig.ts     # 公告配置
 ├── backgroundWallpaper.ts    # 背景壁纸配置
 ├── commentConfig.ts          # 评论系统配置
+├── countdownConfig.ts        # 日期倒计时事件配置
 ├── coverImageConfig.ts       # 封面图配置
 ├── displaySettingsConfig.ts  # 设置面板配置
 ├── dynamicConfig.ts          # 动态页面配置

@@ -469,6 +469,16 @@ export const en: Translation = {
 	[Key.siteInfoDomain]: "Domain",
 	[Key.siteInfoLicense]: "License",
 
+	// Date Countdown
+	[Key.countdown]: "Date Countdown",
+	[Key.countdownYearRemaining]: "{days} days left this year",
+	[Key.countdownMonthRemaining]: "{days} days left this month",
+	[Key.countdownWeekRemaining]: "{days} days left this week",
+	[Key.countdownTodayHoursRemaining]: "{hours} hours left today",
+	[Key.countdownTodayMinutesRemaining]: "{minutes} minutes left today",
+	[Key.countdownNextStation]: "Next up",
+	[Key.countdownDayUnit]: "days",
+
 	// Calendar Component
 	[Key.calendarSunday]: "Sun",
 	[Key.calendarMonday]: "Mon",
